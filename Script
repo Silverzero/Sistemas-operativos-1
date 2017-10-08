@@ -1,0 +1,48 @@
+#!/bin/bash
+if [ -x $mitar ];then
+	true
+else 
+	echo "Error no es ejecutable"
+	exit 1
+fi
+if [ -d "tmp" ]
+then
+	rm -r tmp
+fi
+mkdir tmp
+cd ./tmp/
+#Fin de 2 y 3
+echo "Hola Mundo!" > Fich1.txt
+head /etc/passwd > Fich2.txt
+head -c 1024 /dev/urandom > Fich3.txt
+#Fin de 4
+./mitar -cf fichtar.mtar Fich1.txt Fich2.txt Fich3.txt
+#Fin de 5
+mkdir ../tmp/out
+cp fichtar.mtar ../tmp/out
+#Fin de 6
+cd ../tmp/out
+./mitar -xf comp.mtar
+#Fin de 7
+	if diff -s ../tmp/Fich1.txt ../tmp/out/Fich1.txt;
+		then
+		true
+	else
+		echo "Error al descomprimir Fich1.txt"
+		exit 1
+	fi
+	if diff -s ../tmp/Fich2.txt ../tmp/out/Fich2.txt;
+		then
+		true
+	else
+		echo "Error al descomprimir Fich2.txt"
+		exit 1
+	fi
+	if diff -s ../tmp/Fich3.txt ../tmp/out/Fich3.txt;
+		then
+		true
+	else
+		echo "Error al descomprimir Fich3.txt"
+		exit 1
+	fi
+exit 0
